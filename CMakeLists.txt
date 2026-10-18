@@ -17,6 +17,5 @@ target_link_libraries(tests PRIVATE linalg) # подключаем либу из
 # линкуем чтобы либа подключалась как любой другой include без указания относительного пути
 target_include_directories(linalg PUBLIC include)
 
-find_package(GTest REQUIRED)
+#find_package(GTest REQUIRED)
 target_link_libraries(tests PRIVATE GTest::gtest GTest::gtest_main)
-
