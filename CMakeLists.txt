@@ -2,6 +2,12 @@ cmake_minimum_required(VERSION 3.20.0)
 project(linalg_tests LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
+add_subdirectory(linalg)
+
+file(GLOB tests_sources CONFIGURE_DEPENDS "source/test_*.cpp")
+add_executable(${PROJECT_NAME} ${tests_sources})
+target_link_libraries(${PROJECT_NAME} PRIVATE linalg) # подключаем либу из папки (PRIVATE=видна только tests)
+
 # Автоматически скачиваем и подключаем GTest
 include(FetchContent)
 FetchContent_Declare(
@@ -10,13 +16,5 @@ FetchContent_Declare(
         DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 FetchContent_MakeAvailable(googletest)
-
-add_subdirectory(linalg)
-
-add_executable(tests source/test_matrix.cpp)
-target_link_libraries(tests PRIVATE linalg) # подключаем либу из папки (PRIVATE=видна только tests)
-# линкуем чтобы либа подключалась как любой другой include без указания относительного пути
-target_include_directories(linalg PUBLIC include)
-
 #find_package(GTest REQUIRED)
-target_link_libraries(tests PRIVATE GTest::gtest GTest::gtest_main)
+target_link_libraries(${PROJECT_NAME} PRIVATE GTest::gtest GTest::gtest_main)
