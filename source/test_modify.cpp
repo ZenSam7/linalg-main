@@ -51,8 +51,8 @@ EXPECT_EQ(c(0, 2), 7.0);
 /*      пункт 5: вывод      */
 
 TEST(Output, Aligned) {
-Matrix m = { {1, 333, 1}, {22, 1, 333} };
+Matrix m = { {1.2, 333, 1}, {22, 1, 333}, {1.111, -1, 0.0} };
 std::ostringstream out;
 out << m;
-EXPECT_EQ(out.str(), "| 1 333   1|\n|22   1 333|\n");
+EXPECT_EQ(out.str(), "|  1.2 333   1|\n|   22   1 333|\n|1.111  -1   0|\n");
 }
