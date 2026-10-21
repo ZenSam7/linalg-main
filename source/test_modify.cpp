@@ -56,3 +56,128 @@ std::ostringstream out;
 out << m;
 EXPECT_EQ(out.str(), "|  1.2 333   1|\n|   22   1 333|\n|1.111  -1   0|\n");
 }
+
+
+/*      нестандартный размер матриц      */
+TEST(Empty, NullInitialize) {
+Matrix m1 = {};
+Matrix m1_copy = m1;
+m1_copy.clear();
+EXPECT_EQ(m1.rows(), m1_copy.rows());
+EXPECT_EQ(m1.columns(), m1_copy.columns());
+
+Matrix m2 = std::initializer_list<std::initializer_list<double>>{{}};
+Matrix m2_copy = m2;
+m2_copy.clear();
+EXPECT_EQ(m2.rows(), m2_copy.rows());
+EXPECT_EQ(m2.columns(), m2_copy.columns());
+
+
+Matrix m3 = std::initializer_list<std::initializer_list<double>>{{1}};
+Matrix m4 = {1};
+EXPECT_EQ(m3, m4);
+EXPECT_EQ(m3.rows(), m4.rows());
+EXPECT_EQ(m3.columns(), m4.columns());
+}
+
+TEST(Empty, ZeroSizesGiveEmptyMatrix) {
+EXPECT_TRUE(Matrix(0).empty());
+EXPECT_EQ(Matrix(0).columns(), 0u);
+EXPECT_TRUE(Matrix(std::initializer_list<double>{}).empty());
+EXPECT_TRUE(transpose(Matrix()).empty());
+EXPECT_EQ(Matrix() + Matrix(), Matrix());
+EXPECT_THROW(Matrix() + Matrix(1, 1), std::runtime_error);
+EXPECT_THROW(Matrix()(0, 0), std::runtime_error);
+}
+
+
+TEST(Empty, ArithmeticWithEmpty) {
+Matrix empty;
+Matrix nonempty = {{1, 2}, {3, 4}};
+
+// вычитание пустых матриц
+EXPECT_EQ(empty - empty, Matrix());
+EXPECT_THROW(empty - nonempty, std::runtime_error);
+EXPECT_THROW(nonempty - empty, std::runtime_error);
+
+// унарный минус
+EXPECT_EQ(-empty, Matrix());
+
+// умножение на скаляр
+EXPECT_EQ(empty * 5.0, Matrix());
+EXPECT_EQ(2.5 * empty, Matrix());
+empty *= 10.0;
+EXPECT_TRUE(empty.empty());
+
+// матричное умножение
+EXPECT_TRUE((Matrix(0, 0) * Matrix(0, 0)).empty());
+}
+
+TEST(Empty, PropertiesOfEmpty) {
+Matrix empty;
+
+EXPECT_EQ(empty.size(), 0u);
+EXPECT_EQ(empty.capacity(), 0u);
+EXPECT_TRUE(empty.begin() == empty.end());
+
+// норма, след, детерминант пустой матрицы
+EXPECT_EQ(empty.norm(), 0.0);
+EXPECT_EQ(empty.trace(), 0.0);
+
+// ранг пустой матрицы = 0
+EXPECT_EQ(empty.rank(), 0u);
+}
+
+TEST(Empty, ModifyEmpty) {
+Matrix empty;
+
+empty.reshape(0, 0);
+EXPECT_TRUE(empty.empty());
+
+empty.reserve(50);
+EXPECT_EQ(empty.capacity(), 50u);
+EXPECT_TRUE(empty.empty());
+
+empty.reshape(2, 3);
+EXPECT_FALSE(empty.empty());
+
+empty.clear();
+EXPECT_EQ(empty.capacity(), 50u); // сохранила capacity
+
+empty.shrink_to_fit();
+EXPECT_EQ(empty.capacity(), 0u);
+}
+
+TEST(Empty, SwapWithEmpty) {
+Matrix empty1, empty2;
+Matrix m = {{1, 2}, {3, 4}};
+
+empty1.swap(empty2);
+EXPECT_TRUE(empty1.empty());
+
+empty1.swap(m);
+EXPECT_FALSE(empty1.empty());
+EXPECT_EQ(empty1.rows(), 2u);
+EXPECT_TRUE(m.empty());
+}
+
+TEST(Empty, AssignmentWithEmpty) {
+Matrix empty;
+
+Matrix copy = empty;
+EXPECT_TRUE(copy.empty());
+
+Matrix m = {{1, 2, 3}, {4, 5, 6}};
+m = empty;
+EXPECT_TRUE(m.empty());
+EXPECT_EQ(m.size(), 0u);
+EXPECT_EQ(m.capacity(), 6u);
+}
+
+TEST(Empty, OutputEmpty) {
+Matrix empty;
+std::ostringstream out;
+out << empty;
+// пустая матрица должна вывести пустую строку или ничего
+EXPECT_EQ(out.str(), "");
+}
