@@ -89,6 +89,11 @@ TEST(Compute, SingularInvertThrows) {
 EXPECT_THROW(invert(Matrix{ {1, 2}, {2, 4} }), std::runtime_error);
 }
 
+TEST(Compute, SolveSmallRightHandSide) {
+    Matrix x = solve(Matrix{ {2, 0}, {0, 2} }, Matrix{ 1e-10, 2e-10 });
+    EXPECT_NEAR(x(0, 0), 5e-11, 1e-20);
+}
+
 /*      пункт 8: тождества из лабы      */
 
 TEST(Identities, Properties) {
