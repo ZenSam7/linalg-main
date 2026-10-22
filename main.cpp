@@ -304,7 +304,7 @@ void demo_exceptions() {
 }
 
 int main() {
-    cout << "КОМПИЛИРОВАТЬ чЕРЕЗ Release (так прирост больше)\n\n";
+    std::cout << "КОМПИЛИРОВАТЬ чЕРЕЗ Release!!!!! (так прирост больше)\n\n";
     demo_multiply();
     demo_transpose();
     demo_gauss();
