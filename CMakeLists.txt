@@ -18,3 +18,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 #find_package(GTest REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE GTest::gtest GTest::gtest_main)
+
+
+# для себя
+add_executable(temp main.cpp)
+target_link_libraries(temp PRIVATE linalg)
