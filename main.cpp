@@ -9,6 +9,7 @@
 #include <new>
 #include <stdexcept>
 #include <vector>
+
 using linalg::Matrix;
 
 
@@ -303,8 +304,14 @@ void demo_exceptions() {
     std::cout << "    отказов " << failures << ", из них состояние потеряно: " << changed << "  (объект валиден, но данные пропали)\n";
 }
 
+#if defined(_WIN64) || defined(_WIN32) || defined(__WIN32) || defined(__WIN64)
+#include <windows.h>
+#endif
 int main() {
-    std::cout << "КОМПИЛИРОВАТЬ чЕРЕЗ Release!!!!! (так прирост больше)\n\n";
+#if defined(_WIN64) || defined(_WIN32) || defined(__WIN32) || defined(__WIN64)
+    SetConsoleOutputCP(CP_UTF8);
+#endif
+    std::cout << "КОМПИЛИРОВАТЬ ЧЕРЕЗ Release!!!!! (так прирост больше)\n\n";
     demo_multiply();
     demo_transpose();
     demo_gauss();
