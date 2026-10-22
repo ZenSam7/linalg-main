@@ -121,8 +121,9 @@ EXPECT_EQ(empty.capacity(), 0u);
 EXPECT_TRUE(empty.begin() == empty.end());
 
 // норма, след, детерминант пустой матрицы
-EXPECT_EQ(empty.norm(), 0.0);
-EXPECT_EQ(empty.trace(), 0.0);
+EXPECT_THROW(empty.norm(), std::runtime_error);
+EXPECT_THROW(empty.trace(), std::runtime_error);
+EXPECT_THROW(empty.det(), std::runtime_error);
 
 // ранг пустой матрицы = 0
 EXPECT_EQ(empty.rank(), 0u);
