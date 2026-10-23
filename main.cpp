@@ -104,7 +104,7 @@ void demo_transpose() {
     title("1. транспонирование: наивное vs блочное мс");
     std::cout << pad("размер", 12, true) << pad("наивное", 12, true) << pad("блочное", 12, true)
               << pad("ускорение", 12, true) << "\n";
-    for (size_t n : {2000, 4000, 4096}) {
+    for (size_t n : {2000, 4000, 4096, 8192}) {
         Matrix m(n, n);
         for (size_t i = 0; i < m.size(); ++i) m.begin()[i] = double(i % 97);
         double best_naive = 1e18, best_block = 1e18;
@@ -165,27 +165,21 @@ Res eliminate(Matrix a, double tol) {
 double max_abs(const Matrix& m) { double r = 0; for (double v : m) r = std::max(r, std::fabs(v)); return r; }
 
 void demo_gauss() {
-    title("2a. выбор ведущего элемента: решаем A*x = f, учебниковый гаусс vs библиотека");
+    title("2. выбор ведущего элемента: решаем A*x = f, учебниковый гаусс vs библиотека");
     struct Case { const char* name; Matrix A, f; const char* expect; };
     Case cases[] = {
         {"A=[[1e-20,1],[1,1]], f=[1,2]", {{1e-20, 1}, {1, 1}}, {1, 2}, "(1, 1)"},
         {"A=[[0,1],[1,0]],     f=[1,2]", {{0, 1}, {1, 0}},     {1, 2}, "(2, 1)"},
     };
-    for (auto& c : cases) {
-        Matrix a = naive_solve(c.A, c.f), b = solve(c.A, c.f);
-        std::cout << c.name << "   верно " << c.expect << "\n"
-                  << "    учебниковый: (" << a(0, 0) << ", " << a(1, 0) << ")\n"
-                  << "    библиотека:  (" << b(0, 0) << ", " << b(1, 0) << ")\n";
-    }
     // случайная система: сравниваем невязку |A*x - f|
-    for (size_t n : {100, 300}) {
+    for (size_t n : {100, 300, 500}) {
         Matrix A(n, n), f(n, 1);
         unsigned long long s = 12345;
         auto rnd = [&]{ s = s * 6364136223846793005ULL + 1442695040888963407ULL; return double(s >> 11) / double(1ULL << 53) * 2 - 1; };
         for (double& v : A) v = rnd();
         for (double& v : f) v = rnd();
         double r1 = (A * naive_solve(A, f) - f).norm(), r2 = (A * solve(A, f) - f).norm();
-        std::cout << "случайная " << n << "x" << n << ": невязка учебниковый " << r1 << ", библиотека " << r2 << "\n";
+        std::cout << "случайная " << n << "x" << n << ": невязка учебниковый " << r1 << ", библиотека " << r2 << " ошибка меньше в: " << (int)(r1/r2) << " раз\n";
     }
 
 }

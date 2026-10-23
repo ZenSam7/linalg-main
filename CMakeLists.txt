@@ -21,5 +21,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE GTest::gtest GTest::gtest_main)
 
 
 # для себя
-add_executable(temp main.cpp)
-target_link_libraries(temp PRIVATE linalg)
+add_executable(demo main.cpp)
+target_link_libraries(demo PRIVATE linalg)
