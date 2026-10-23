@@ -1,4 +1,3 @@
 [submodule "linalg"]
 	path = linalg
-	url = https://git.miem.hse.ru/zensam7_laba1/linalg
-
+	url = https://github.com/ZenSam7/linalg-library.git
