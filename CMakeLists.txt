@@ -3,6 +3,7 @@ project(linalg_tests LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(linalg)
+add_subdirectory(python_liba)
 
 file(GLOB tests_sources CONFIGURE_DEPENDS "source/test_*.cpp")
 add_executable(${PROJECT_NAME} ${tests_sources})
